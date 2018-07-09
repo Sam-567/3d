@@ -7,11 +7,9 @@ import javax.swing.JPanel;
 
 public class render extends JPanel{
 	
-	Block one, two;
+	final static int ToScreen = 100;
 	render(){
 		super();
-		one = new Block(100, 0);
-		two = new Block(200, 0);
 		
 	}
 	
@@ -21,57 +19,47 @@ public class render extends JPanel{
 		super.paintComponent(G);
 		
 		Polygon p = new Polygon();
-		p.addPoint(200, 200);
-		p.addPoint(200, 400);
-		p.addPoint(300, 400);
-		p.addPoint(300, 200);
-		g.drawPolygon(p);
-
-		Polygon close = drawFace (100, 200, 100);
-		Polygon far = drawFace (200, 300, 100);
-		
-		g.drawPolygon( close );
-		g.drawPolygon( far );
-		g.drawPolygon( drawFace (300, 400, 100) );
-		/*g.drawPolygon( drawFace (400, 500, 100) );
-		g.drawPolygon( drawFace (500, 600, 100) );
-		g.drawPolygon( drawFace (600, 700, 100) );
-		g.drawPolygon( drawFace (700, 800, 100) );*/
-		
-		
+		g.drawPolygon( p );
 	}
 
 	
 	public Polygon drawFace(int SFront, int SBack, int Width) {
-		assert(false);
+	}
+	
+	public int[] PointOnScreen(int[] points) {
+		int x = points[0];
+		int y = points[1];
+		int z = points[2];
 		
-		int ZHeight = 50;
-		double Scale = 300/Math.PI;
-		//Assuming looking forward
+		int[] loc = new int[2];
 		
-		double MFront = Math.atan( SFront / ZHeight ) * Scale;
-		double MBack = Math.atan( SBack / ZHeight ) * Scale;
+		double centerDistance = Math.tan( OutwardsAngle(points)) * ToScreen;
 		
-		double RealFront = Math.sqrt(SFront^2 + ZHeight^2);
-		double RealBack = Math.sqrt(SBack^2 + ZHeight^2);
+		loc[0] = x;
+		loc[1] = y;
 		
-		double FrontLeft = Math.atan( -Width / (2*RealFront) ) * Scale;
-		double FrontRight = Math.atan( Width / (2*RealFront) ) * Scale;
+		return loc;
+	}
+	
+
+	public double RadialAngle(int[] points) {
+		int x = points[0];
+		int y = points[1];
+		int z = points[2];
 		
-		double BackLeft = Math.atan( -Width / (2*RealBack) ) * Scale;
-		double BackRight = Math.atan( Width / (2*RealBack) ) * Scale;
+		double angle = Math.atan( x /y );
+		return angle;
+	}
+	
+	public double OutwardsAngle(int[] points) {
+		int x = points[0];
+		int y = points[1];
+		int z = points[2];
 		
-		Polygon p = new Polygon();
-		p.addPoint( (int) FrontLeft + 400, (int) MFront + 200);
-		p.addPoint( (int) FrontRight + 400, (int) MFront + 200);
-		p.addPoint( (int) BackRight + 400, (int) MBack + 200);
-		p.addPoint( (int) BackLeft + 400, (int) MBack + 200);
+		double opp = Math.sqrt(x^2 + y^2);
+		double angle = Math.atan(opp/z);
 		
-		System.out.println( "X points " + Arrays.toString(p.xpoints) );
-		System.out.println( "Y points " + Arrays.toString(p.ypoints) );
-		System.out.println("Next \n");
-		
-		return p;
+		return angle;
 	}
 	
 	public void testPolygon() {
